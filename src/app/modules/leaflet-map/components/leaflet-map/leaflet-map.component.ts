@@ -3,6 +3,7 @@ import { AppState } from '../../../store/store';
 import { Store } from '@ngrx/store';
 import { EntityDistributor } from '../../../core/services/distribution/entity-distributor.service';
 import { Entity } from '../../../core/types/entity/entity';
+import CustomGeoJson from  './custom.geo.json';
 
 @Component({
   selector: 'gz-leaflet-map',
@@ -20,13 +21,16 @@ export class LeafletMapComponent implements OnInit {
 
   ngOnInit(): void {
     this.initMap();
-    this.initRasters();
+    //this.initRasters();
+    this.initGeoJson();
     this.initEntities();
     this.entityDistributor.init();
   }
 
   initMap() {
-    this.map = L.map('leafletMap').setView([32, 34], 8);
+    this.map = L.map('leafletMap', {
+      renderer: L.svg({padding: 1})
+    }).setView([32, 34], 8);
   }
 
   initRasters() {
@@ -38,6 +42,10 @@ export class LeafletMapComponent implements OnInit {
       id: 'mapbox.streets',
       accessToken: 'pk.eyJ1IjoibXlrZWxzIiwiYSI6ImNqZ2Rtd2hkdjNjdngycXJuNTk2eWIycDMifQ.U0JlFzbO8ZXcBuYAlhTVzQ'
     }).addTo(this.map);
+  }
+
+  initGeoJson() {
+    new L.GeoJSON(CustomGeoJson).addTo(this.map);
   }
 
   initEntities() {
